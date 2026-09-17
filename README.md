@@ -49,3 +49,5 @@ Gerenciar usuários
     ![Tux, the Linux mascot](imagens/11.png)
     ![Tux, the Linux mascot](imagens/12.png)
 
+
+    ![Modelo Entidade-Relacionamento](QuadraDas_MER.png)
