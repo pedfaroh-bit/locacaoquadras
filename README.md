@@ -36,18 +36,18 @@ Gerenciar usuários
 #locacaodequadra
 
 
-    ![Tux, the Linux mascot](imagens/1.png)
-    ![Tux, the Linux mascot](imagens/2.png)
-    ![Tux, the Linux mascot](imagens/3.png)
-    ![Tux, the Linux mascot](imagens/4.png)
-    ![Tux, the Linux mascot](imagens/5.png)
-    ![Tux, the Linux mascot](imagens/6.png)
-    ![Tux, the Linux mascot](imagens/7.png)
-    ![Tux, the Linux mascot](imagens/8.png)
-    ![Tux, the Linux mascot](imagens/9.png)
-    ![Tux, the Linux mascot](imagens/10.png)
-    ![Tux, the Linux mascot](imagens/11.png)
-    ![Tux, the Linux mascot](imagens/12.png)
+![pagina-inicial](/imagens/pagina-inicial.png)
+![lista-de-quadras](/imagens/lista-de-quadras.png)
+![detalhes-da-quadra](/imagens/detalhes-da-quadra.png)
+![login](/imagens/login.png)
+![cadastro](/imagens/cadastro.png)
+![realizar reserva](/imagens/realizar-reserva.png)
+![minhas-reservas](/imagens/minhas-reservas.png)
+![meu-perfil](/imagens/meu-perfil.png)
+![gerenciar-quadra](/imagens/gerenciar-quadras.png)
+![gerenciar-horarios](/imagens/gerenciar-horarios.png)
+![gerenciar-reserva](/imagens/gerenciar-reservas.png)
+![gerenciar-usuarios](/imagens/gerenciar-usuarios.png)
 
 
     ![Modelo Entidade-Relacionamento](QuadraDas_MER.png)
