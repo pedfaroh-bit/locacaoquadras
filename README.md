@@ -48,6 +48,4 @@ Gerenciar usuários
 ![gerenciar-horarios](/imagens/gerenciar-horarios.png)
 ![gerenciar-reserva](/imagens/gerenciar-reservas.png)
 ![gerenciar-usuarios](/imagens/gerenciar-usuarios.png)
-
-
-    ![Modelo Entidade-Relacionamento](QuadraDas_MER.png)
+ ![QuadraDas_MER](/imagens/QuadraDas_MER.png)
