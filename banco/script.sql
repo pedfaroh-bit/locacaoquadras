@@ -5,7 +5,7 @@ CREATE TABLE modalidade (
   id_modalidade INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
   preco_semana DECIMAL(10,2) NOT NULL,
-  preco_fim_de_semana DECIMAL(10,2) NOT NULL
+  preco_fimdesemana DECIMAL(10,2) NOT NULL
 );
 
 CREATE TABLE usuario (
@@ -26,6 +26,7 @@ CREATE TABLE administrador (
 CREATE TABLE quadra (
   id_quadra INT AUTO_INCREMENT PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
+  endereco VARCHAR(255) NOT NULL,
   descricao VARCHAR(255),
   id_modalidade INT NOT NULL,
   FOREIGN KEY (id_modalidade) REFERENCES modalidade(id_modalidade)
@@ -44,7 +45,6 @@ CREATE TABLE reserva (
   id_usuario INT NOT NULL,
   id_horario INT NOT NULL,
   data_reserva DATE NOT NULL,
-  data_criacao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   status ENUM('Ativa','Cancelada') NOT NULL DEFAULT 'Ativa',
   valor_pago DECIMAL(10,2) NOT NULL,
   valor_devolvido DECIMAL(10,2) NULL,
