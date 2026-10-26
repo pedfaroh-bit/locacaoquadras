@@ -2,6 +2,7 @@ package com.locacaoquadras.servlet;
 
 import com.locacaoquadras.dao.ModalidadeDAO;
 import com.locacaoquadras.model.Modalidade;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
