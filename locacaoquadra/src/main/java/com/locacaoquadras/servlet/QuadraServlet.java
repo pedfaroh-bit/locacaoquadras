@@ -22,6 +22,8 @@ public class QuadraServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        req.setCharacterEncoding("UTF-8");
+
         String acao = req.getParameter("acao");
         if (acao == null) {
             acao = "listar";
@@ -80,4 +82,23 @@ public class QuadraServlet extends HttpServlet {
             throw new ServletException("Erro ao salvar quadra", e);
         }
     }
+<<<<<<< HEAD
+=======
+
+    private void abrirFormulario(HttpServletRequest req, HttpServletResponse resp, Quadra quadra)
+            throws ServletException, IOException, SQLException {
+        req.setAttribute("quadra", quadra);
+        req.setAttribute("modalidades", modalidadeDao.listar());
+        req.getRequestDispatcher("/quadra/form.jsp").forward(req, resp);
+    }
+
+    private void mostrarLista(HttpServletRequest req, HttpServletResponse resp, String erro)
+            throws ServletException, IOException, SQLException {
+        String termo = req.getParameter("q");
+
+        req.setAttribute("erro", erro);
+        req.setAttribute("quadras", dao.buscar(termo));
+        req.getRequestDispatcher("/quadra/lista.jsp").forward(req, resp);
+    }
+>>>>>>> 87d0487 (Ajustes no fluxo de reservas, navegacao dinamica, tela de perfil e estilizacao)
 }
