@@ -46,6 +46,30 @@ public class QuadraDAO {
         return lista;
     }
 
+    // NOVO: busca por nome, endereço ou modalidade
+    public List<Quadra> buscar(String termo) throws SQLException {
+        if (termo == null || termo.trim().isEmpty()) {
+            return listar();
+        }
+        String sql = SELECT_BASE
+                + "WHERE q.nome ILIKE ? OR q.endereco ILIKE ? OR m.nome ILIKE ? "
+                + "ORDER BY q.id_quadra";
+        String filtro = "%" + termo.trim() + "%";
+        List<Quadra> lista = new ArrayList<>();
+        try (Connection con = conectar();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, filtro);
+            ps.setString(2, filtro);
+            ps.setString(3, filtro);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(montar(rs));
+                }
+            }
+        }
+        return lista;
+    }
+
     public Quadra buscarPorId(int id) throws SQLException {
         String sql = SELECT_BASE + "WHERE q.id_quadra = ?";
         try (Connection con = conectar();

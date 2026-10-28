@@ -25,6 +25,8 @@ public class QuadraServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        req.setCharacterEncoding("UTF-8");
+
         String acao = req.getParameter("acao");
         if (acao == null) {
             acao = "listar";
@@ -107,8 +109,10 @@ public class QuadraServlet extends HttpServlet {
 
     private void mostrarLista(HttpServletRequest req, HttpServletResponse resp, String erro)
             throws ServletException, IOException, SQLException {
+        String termo = req.getParameter("q");
+
         req.setAttribute("erro", erro);
-        req.setAttribute("quadras", dao.listar());
+        req.setAttribute("quadras", dao.buscar(termo));
         req.getRequestDispatcher("/quadra/lista.jsp").forward(req, resp);
     }
 }

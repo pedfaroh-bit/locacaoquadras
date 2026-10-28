@@ -1,71 +1,52 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="dao.ModalidadeDAO, java.util.List" %>
+<%
+    ModalidadeDAO dao = new ModalidadeDAO();
+    String acao = request.getParameter("acao");
+    String idDel = request.getParameter("id");
+
+    if ("deletar".equals(acao) && idDel != null) {
+        dao.deletar(Integer.parseInt(idDel));
+        response.sendRedirect("lista.jsp");
+        return;
+    }
+
+    List<String[]> lista = dao.listar();
+%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${empty quadra ? 'Nova quadra' : 'Editar quadra'} - QuadraDas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <meta charset="UTF-8">
+    <title>Lista de Modalidades</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-
-<%@ include file="/WEB-INF/topo.jspf" %>
-
-<main class="container pagina">
-
-  <div class="form-card">
-    <h1>${empty quadra ? 'Nova quadra' : 'Editar quadra'}</h1>
-
-    <c:if test="${empty modalidades}">
-      <div class="alerta">
-        Cadastre pelo menos uma modalidade antes de criar quadras.
-        <a href="${pageContext.request.contextPath}/modalidades?acao=novo"><strong>Criar modalidade</strong></a>
-      </div>
-    </c:if>
-
-    <form action="${pageContext.request.contextPath}/quadras" method="post">
-      <input type="hidden" name="idQuadra" value="${quadra.idQuadra}">
-
-      <div class="form-grupo">
-        <label for="nome">Nome</label>
-        <input type="text" id="nome" name="nome" maxlength="100" required
-               value="<c:out value='${quadra.nome}'/>">
-      </div>
-
-      <div class="form-grupo">
-        <label for="endereco">Endereço</label>
-        <input type="text" id="endereco" name="endereco" maxlength="255" required
-               value="<c:out value='${quadra.endereco}'/>">
-      </div>
-
-      <div class="form-grupo">
-        <label for="descricao">Descrição</label>
-        <textarea id="descricao" name="descricao" rows="3" maxlength="255"><c:out value="${quadra.descricao}"/></textarea>
-      </div>
-
-      <div class="form-grupo">
-        <label for="idModalidade">Modalidade</label>
-        <select id="idModalidade" name="idModalidade" required>
-          <option value="">Selecione...</option>
-          <c:forEach items="${modalidades}" var="m">
-            <option value="${m.idModalidade}"
-              <c:if test="${quadra.idModalidade == m.idModalidade}">selected</c:if>>
-              <c:out value="${m.nome}"/>
-            </option>
-          </c:forEach>
-        </select>
-      </div>
-
-      <div class="form-acoes">
-        <button type="submit" class="btn">Salvar</button>
-        <a href="${pageContext.request.contextPath}/quadras" class="btn btn-secundario">Cancelar</a>
-      </div>
-    </form>
-  </div>
-
-</main>
-
+<body class="bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Modalidades Cadastradas</h2>
+            <a href="form.jsp" class="bg-blue-600 text-white px-4 py-2 rounded font-semibold">+ Nova Modalidade</a>
+        </div>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b">
+                    <th class="p-2">ID</th>
+                    <th class="p-2">Nome</th>
+                    <th class="p-2">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for (String[] item : lista) { %>
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="p-2"><%= item[0] %></td>
+                    <td class="p-2 font-medium"><%= item[1] %></td>
+                    <td class="p-2 space-x-2">
+                        <a href="form.jsp?id=<%= item[0] %>&nome=<%= item[1] %>" class="text-blue-600">Editar</a>
+                        <a href="lista.jsp?acao=deletar&id=<%= item[0] %>" onclick="return confirm('Excluir?')" class="text-red-600">Excluir</a>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

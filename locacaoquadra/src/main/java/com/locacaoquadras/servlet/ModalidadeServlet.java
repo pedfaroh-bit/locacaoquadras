@@ -3,22 +3,18 @@ package com.locacaoquadras.servlet;
 import com.locacaoquadras.dao.ModalidadeDAO;
 import com.locacaoquadras.model.Modalidade;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
-@WebServlet("/modalidades")
+@WebServlet("/modalidade")   // AJUSTE: mantenha o mesmo caminho que você já usava
 public class ModalidadeServlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
-    private final ModalidadeDAO dao = new ModalidadeDAO();
+    private ModalidadeDAO dao = new ModalidadeDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -31,40 +27,38 @@ public class ModalidadeServlet extends HttpServlet {
 
         try {
             switch (acao) {
-                case "novo":
+                case "novo": {
+                    // AJUSTE: caminho do seu JSP de formulário
                     req.getRequestDispatcher("/modalidade/form.jsp").forward(req, resp);
                     break;
-
+                }
                 case "editar": {
                     int id = Integer.parseInt(req.getParameter("id"));
                     Modalidade m = dao.buscarPorId(id);
                     if (m == null) {
-                        resp.sendRedirect(req.getContextPath() + "/modalidades");
+                        resp.sendRedirect(req.getContextPath() + "/modalidade");
                         return;
                     }
                     req.setAttribute("modalidade", m);
                     req.getRequestDispatcher("/modalidade/form.jsp").forward(req, resp);
                     break;
                 }
-
-                case "excluir":
-                    try {
-                        dao.excluir(Integer.parseInt(req.getParameter("id")));
-                        resp.sendRedirect(req.getContextPath() + "/modalidades");
-                    } catch (SQLIntegrityConstraintViolationException e) {
-                        mostrarLista(req, resp,
-                                "Não é possível excluir: existem quadras usando esta modalidade.");
-                    }
+                case "excluir": {
+                    int id = Integer.parseInt(req.getParameter("id"));
+                    dao.excluir(id);
+                    resp.sendRedirect(req.getContextPath() + "/modalidade");
                     break;
-
-                default:
-                    mostrarLista(req, resp, null);
+                }
+                default: {
+                    List<Modalidade> lista = dao.listar();
+                    req.setAttribute("modalidades", lista);
+                    // AJUSTE: caminho do seu JSP de listagem
+                    req.getRequestDispatcher("/modalidade/lista.jsp").forward(req, resp);
                     break;
+                }
             }
-        } catch (NumberFormatException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parâmetro inválido");
-        } catch (SQLException e) {
-            throw new ServletException("Erro ao acessar modalidades", e);
+        } catch (Exception e) {
+            throw new ServletException(e);
         }
     }
 
@@ -75,32 +69,14 @@ public class ModalidadeServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
 
         try {
-            String idTexto = req.getParameter("id");
+            String idParam = req.getParameter("id");
+            int id = (idParam == null || idParam.isEmpty()) ? 0 : Integer.parseInt(idParam);
+            String nome = req.getParameter("nome");
 
-            Modalidade m = new Modalidade();
-            m.setNome(req.getParameter("nome"));
-            m.setPrecoSemana(new BigDecimal(req.getParameter("precoSemana").trim().replace(",", ".")));
-            m.setPrecoFimdesemana(new BigDecimal(req.getParameter("precoFimdesemana").trim().replace(",", ".")));
-
-            if (idTexto == null || idTexto.trim().isEmpty()) {
-                dao.inserir(m);
-            } else {
-                m.setIdModalidade(Integer.parseInt(idTexto));
-                dao.atualizar(m);
-            }
-            resp.sendRedirect(req.getContextPath() + "/modalidades");
-
-        } catch (NumberFormatException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Dados inválidos");
-        } catch (SQLException e) {
-            throw new ServletException("Erro ao salvar modalidade", e);
+            dao.salvar(id, nome);
+            resp.sendRedirect(req.getContextPath() + "/modalidade");
+        } catch (Exception e) {
+            throw new ServletException(e);
         }
-    }
-
-    private void mostrarLista(HttpServletRequest req, HttpServletResponse resp, String erro)
-            throws ServletException, IOException, SQLException {
-        req.setAttribute("erro", erro);
-        req.setAttribute("lista", dao.listar());
-        req.getRequestDispatcher("/modalidade/lista.jsp").forward(req, resp);
     }
 }

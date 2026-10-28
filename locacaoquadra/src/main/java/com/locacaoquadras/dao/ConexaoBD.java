@@ -9,26 +9,27 @@ import java.util.Properties;
 
 public class ConexaoBD {
 
-    private static final Properties CONFIG = new Properties();
-
-    static {
+    public static Connection getConexao() throws SQLException {
+        Properties props = new Properties();
         try (InputStream in = ConexaoBD.class.getClassLoader()
                 .getResourceAsStream("db.properties")) {
             if (in == null) {
-                throw new IllegalStateException(
-                        "Arquivo db.properties não encontrado em src/main/resources");
+                throw new SQLException("db.properties não encontrado");
             }
-            CONFIG.load(in);
-            Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (IOException | ClassNotFoundException e) {
-            throw new ExceptionInInitializerError(e);
+            props.load(in);
+        } catch (IOException e) {
+            throw new SQLException("Erro ao ler db.properties", e);
         }
-    }
 
-    public static Connection getConexao() throws SQLException {
+        try {
+            Class.forName(props.getProperty("db.driver", "org.postgresql.Driver"));
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("Driver do PostgreSQL não encontrado", e);
+        }
+
         return DriverManager.getConnection(
-                CONFIG.getProperty("db.url"),
-                CONFIG.getProperty("db.usuario"),
-                CONFIG.getProperty("db.senha"));
+                props.getProperty("db.url"),
+                props.getProperty("db.user"),
+                props.getProperty("db.password"));
     }
 }
