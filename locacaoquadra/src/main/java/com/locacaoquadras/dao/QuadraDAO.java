@@ -1,29 +1,25 @@
 package com.locacaoquadras.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.locacaoquadras.config.ConnectionPoolConfig;
 import com.locacaoquadras.model.Quadra;
 
 public class QuadraDAO {
 
-    private static final String URL =
-            "jdbc:mysql://localhost:3306/locacao_quadras?useSSL=false&serverTimezone=UTC";
-    private static final String USUARIO = "root";
-    private static final String SENHA = "sua_senha";
+    // Traz também o nome da modalidade para mostrar na tabela
+    private static final String SELECT =
+        "SELECT q.*, m.nome AS nome_modalidade FROM quadra q "
+        + "JOIN modalidade m ON m.id_modalidade = q.id_modalidade";
 
-    private Connection conectar() throws SQLException {
-        return DriverManager.getConnection(URL, USUARIO, SENHA);
-    }
-
-    public void inserir(Quadra q) throws SQLException {
+    public void createQuadra(Quadra q) throws SQLException {
         String sql = "INSERT INTO quadra (nome, endereco, descricao, id_modalidade) VALUES (?, ?, ?, ?)";
-        try (Connection con = conectar();
+        try (Connection con = ConnectionPoolConfig.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, q.getNome());
             ps.setString(2, q.getEndereco());
@@ -33,11 +29,11 @@ public class QuadraDAO {
         }
     }
 
-    public List<Quadra> listar() throws SQLException {
-        String sql = "SELECT * FROM quadra ORDER BY id_quadra";
+    public List<Quadra> findAllQuadras() throws SQLException {
+        String sql = SELECT + " ORDER BY q.nome";
         List<Quadra> lista = new ArrayList<>();
 
-        try (Connection con = conectar();
+        try (Connection con = ConnectionPoolConfig.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -47,34 +43,10 @@ public class QuadraDAO {
         return lista;
     }
 
-    // NOVO: busca por nome, endereço ou modalidade
-    public List<Quadra> buscar(String termo) throws SQLException {
-        if (termo == null || termo.trim().isEmpty()) {
-            return listar();
-        }
-        String sql = SELECT_BASE
-                + "WHERE q.nome ILIKE ? OR q.endereco ILIKE ? OR m.nome ILIKE ? "
-                + "ORDER BY q.id_quadra";
-        String filtro = "%" + termo.trim() + "%";
-        List<Quadra> lista = new ArrayList<>();
-        try (Connection con = conectar();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, filtro);
-            ps.setString(2, filtro);
-            ps.setString(3, filtro);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    lista.add(montar(rs));
-                }
-            }
-        }
-        return lista;
-    }
+    public Quadra findQuadraById(int id) throws SQLException {
+        String sql = SELECT + " WHERE q.id_quadra = ?";
 
-    public Quadra buscarPorId(int id) throws SQLException {
-        String sql = "SELECT * FROM quadra WHERE id_quadra = ?";
-
-        try (Connection con = conectar();
+        try (Connection con = ConnectionPoolConfig.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
 
@@ -87,10 +59,10 @@ public class QuadraDAO {
         return null;
     }
 
-    public void atualizar(Quadra q) throws SQLException {
+    public void updateQuadra(Quadra q) throws SQLException {
         String sql = "UPDATE quadra SET nome = ?, endereco = ?, descricao = ?, id_modalidade = ? WHERE id_quadra = ?";
 
-        try (Connection con = conectar();
+        try (Connection con = ConnectionPoolConfig.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, q.getNome());
             ps.setString(2, q.getEndereco());
@@ -101,10 +73,10 @@ public class QuadraDAO {
         }
     }
 
-    public void excluir(int id) throws SQLException {
+    public void deleteQuadraById(int id) throws SQLException {
         String sql = "DELETE FROM quadra WHERE id_quadra = ?";
 
-        try (Connection con = conectar();
+        try (Connection con = ConnectionPoolConfig.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
@@ -118,6 +90,7 @@ public class QuadraDAO {
         q.setEndereco(rs.getString("endereco"));
         q.setDescricao(rs.getString("descricao"));
         q.setIdModalidade(rs.getInt("id_modalidade"));
+        q.setNomeModalidade(rs.getString("nome_modalidade"));
         return q;
     }
 }

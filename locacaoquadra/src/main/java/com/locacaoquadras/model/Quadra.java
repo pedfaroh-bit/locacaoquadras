@@ -7,9 +7,7 @@ public class Quadra {
     private String endereco;
     private String descricao;
     private int idModalidade;
-
-    public Quadra() {
-    }
+    private String nomeModalidade;
 
     public int getIdQuadra() {
         return idQuadra;
@@ -49,5 +47,13 @@ public class Quadra {
 
     public void setIdModalidade(int idModalidade) {
         this.idModalidade = idModalidade;
+    }
+
+    public String getNomeModalidade() {
+        return nomeModalidade;
+    }
+
+    public void setNomeModalidade(String nomeModalidade) {
+        this.nomeModalidade = nomeModalidade;
     }
 }

@@ -1,17 +1,12 @@
 package com.locacaoquadras.model;
 
-public class Modalidade {
+import java.math.BigDecimal;
 
+public class Modalidade {
     private int idModalidade;
     private String nome;
-
-    public Modalidade() {
-    }
-
-    public Modalidade(int idModalidade, String nome) {
-        this.idModalidade = idModalidade;
-        this.nome = nome;
-    }
+    private BigDecimal precoSemana;
+    private BigDecimal precoFimdesemana;
 
     public int getIdModalidade() {
         return idModalidade;
@@ -27,5 +22,21 @@ public class Modalidade {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public BigDecimal getPrecoSemana() {
+        return precoSemana;
+    }
+
+    public void setPrecoSemana(BigDecimal precoSemana) {
+        this.precoSemana = precoSemana;
+    }
+
+    public BigDecimal getPrecoFimdesemana() {
+        return precoFimdesemana;
+    }
+
+    public void setPrecoFimdesemana(BigDecimal precoFimdesemana) {
+        this.precoFimdesemana = precoFimdesemana;
     }
 }

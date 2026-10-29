@@ -1,4 +1,4 @@
-﻿CREATE DATABASE IF NOT EXISTS locacao_quadras;
+CREATE DATABASE IF NOT EXISTS locacao_quadras;
 USE locacao_quadras;
 
 CREATE TABLE modalidade (
