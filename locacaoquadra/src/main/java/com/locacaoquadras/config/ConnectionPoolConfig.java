@@ -14,7 +14,7 @@ public class ConnectionPoolConfig {
         + "INIT=RUNSCRIPT FROM 'classpath:schema.sql'";
 
     private static final String USUARIO = "sa";
-    private static final String SENHA = "";
+    private static final String SENHA = "sa";
 
     private static BasicDataSource dataSource;
 
