@@ -53,7 +53,7 @@ public class UsuarioDAO {
 
     // Se a senha vier vazia, mantém a senha atual
     public void updateUsuario(Usuario u) throws SQLException {
-        boolean trocarSenha = u.getSenha() != null && !u.getSenha().isBlank();
+        boolean trocarSenha = u.getSenha() != null && !u.getSenha().trim().isEmpty();
         String sql = trocarSenha
             ? "UPDATE usuario SET nome = ?, email = ?, telefone = ?, senha = ? WHERE id_usuario = ?"
             : "UPDATE usuario SET nome = ?, email = ?, telefone = ? WHERE id_usuario = ?";

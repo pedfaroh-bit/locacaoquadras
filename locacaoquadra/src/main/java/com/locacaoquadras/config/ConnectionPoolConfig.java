@@ -7,10 +7,10 @@ import org.apache.commons.dbcp2.BasicDataSource;
 
 public class ConnectionPoolConfig {
 
-    // Banco H2 em arquivo, salvo em C:\Users\<seu usuario>\locacao_quadras.mv.db
+    // Banco H2 em arquivo, salvo em C:\Users\<seu usuario>\locacao_quadras_v1.mv.db
     // INIT roda o schema.sql (src/main/resources) para criar as tabelas que ainda não existem.
     private static final String URL =
-        "jdbc:h2:~/locacao_quadras;MODE=MySQL;DATABASE_TO_LOWER=TRUE;"
+        "jdbc:h2:~/locacao_quadras_v1;MODE=MySQL;DATABASE_TO_LOWER=TRUE;"
         + "INIT=RUNSCRIPT FROM 'classpath:schema.sql'";
 
     private static final String USUARIO = "sa";

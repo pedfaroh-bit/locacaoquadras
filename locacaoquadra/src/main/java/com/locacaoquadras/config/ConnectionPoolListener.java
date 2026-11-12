@@ -10,6 +10,11 @@ import javax.servlet.annotation.WebListener;
 public class ConnectionPoolListener implements ServletContextListener {
 
     @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        // nada a fazer na inicialização (exigido pelo Servlet 3.0)
+    }
+
+    @Override
     public void contextDestroyed(ServletContextEvent sce) {
         ConnectionPoolConfig.close();
     }

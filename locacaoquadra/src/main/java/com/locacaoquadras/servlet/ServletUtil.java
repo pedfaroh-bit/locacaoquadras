@@ -3,7 +3,6 @@ package com.locacaoquadras.servlet;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +23,7 @@ public final class ServletUtil {
     public static void redirecionarComErro(HttpServletRequest req, HttpServletResponse resp, String caminho,
             String mensagem) throws IOException {
         resp.sendRedirect(req.getContextPath() + caminho + "?erro="
-            + URLEncoder.encode(mensagem, StandardCharsets.UTF_8));
+            + URLEncoder.encode(mensagem, "UTF-8"));
     }
 
     // Traduz os erros mais comuns do banco para uma mensagem que o usuário entende
@@ -42,7 +41,7 @@ public final class ServletUtil {
     }
 
     public static boolean vazio(String texto) {
-        return texto == null || texto.isBlank();
+        return texto == null || texto.trim().isEmpty();
     }
 
     // Aceita "10,50" ou "10.50"

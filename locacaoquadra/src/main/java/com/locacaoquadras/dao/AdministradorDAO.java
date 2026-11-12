@@ -52,7 +52,7 @@ public class AdministradorDAO {
 
     // Se a senha vier vazia, mantém a senha atual
     public void updateAdministrador(Administrador a) throws SQLException {
-        boolean trocarSenha = a.getSenha() != null && !a.getSenha().isBlank();
+        boolean trocarSenha = a.getSenha() != null && !a.getSenha().trim().isEmpty();
         String sql = trocarSenha
             ? "UPDATE administrador SET nome = ?, email = ?, senha = ? WHERE id_administrador = ?"
             : "UPDATE administrador SET nome = ?, email = ? WHERE id_administrador = ?";
