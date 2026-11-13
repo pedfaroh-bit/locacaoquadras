@@ -1,5 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.br.locacaoquadras</groupId>
@@ -17,6 +19,7 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -48,11 +51,15 @@
             <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
+
     </dependencies>
 
     <build>
+
         <finalName>locacaoquadra</finalName>
+
         <plugins>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -66,31 +73,33 @@
             </plugin>
 
             <plugin>
-                <groupId>org.codehaus.cargo</groupId>
-                <artifactId>cargo-maven3-plugin</artifactId>
-                <version>1.10.14</version>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.1</version>
+
                 <configuration>
-                    <container>
-                        <containerId>tomcat7x</containerId>
-                        <type>installed</type>
-                        <home>C:/Users/pedro.hsfaro1/Downloads/apache-tomcat-7.0.109-windows-x64/apache-tomcat-7.0.109</home>
-                    </container>
-                    <configuration>
-                        <type>standalone</type>
-                        <properties>
-                            <cargo.servlet.port>8080</cargo.servlet.port>
-                        </properties>
-                    </configuration>
-                    <deployables>
-                        <deployable>
-                            <type>war</type>
-                            <properties>
-                                <context>/locacaoquadra</context>
-                            </properties>
-                        </deployable>
-                    </deployables>
+                    <path>/</path>
                 </configuration>
+
+                <executions>
+                    <execution>
+                        <id>tomcat-run</id>
+                        <goals>
+                            <goal>exec-war</goal>
+                        </goals>
+                        <phase>package</phase>
+
+                        <configuration>
+                            <enableNaming>false</enableNaming>
+                        </configuration>
+
+                    </execution>
+                </executions>
+
             </plugin>
+
         </plugins>
+
     </build>
+
 </project>
