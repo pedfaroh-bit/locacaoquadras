@@ -32,6 +32,6 @@ public class ListReservaServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new ServletException(e);
         }
-        req.getRequestDispatcher("/reserva/dashboard.jsp").forward(req, resp);
+        req.getRequestDispatcher("/reserva/bloqueio.jsp").forward(req, resp);
     }
 }

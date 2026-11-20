@@ -6,6 +6,10 @@
          version="3.0">
   <display-name>locacaoquadra</display-name>
 
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
   <!-- Console web do H2: http://localhost:8080/locacaoquadra/console -->
   <servlet>
     <servlet-name>H2Console</servlet-name>
@@ -15,6 +19,16 @@
   <servlet-mapping>
     <servlet-name>H2Console</servlet-name>
     <url-pattern>/console/*</url-pattern>
+  </servlet-mapping>
+
+  <!-- Roteador de telas para facilitar testes e navegação -->
+  <servlet>
+    <servlet-name>TelaServlet</servlet-name>
+    <servlet-class>com.locacaoquadras.servlet.TelaServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TelaServlet</servlet-name>
+    <url-pattern>/tela</url-pattern>
   </servlet-mapping>
 
 </web-app>

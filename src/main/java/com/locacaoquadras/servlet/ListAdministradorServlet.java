@@ -27,6 +27,6 @@ public class ListAdministradorServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new ServletException(e);
         }
-        req.getRequestDispatcher("/administrador/dashboard.jsp").forward(req, resp);
+        req.getRequestDispatcher("/administrador/bloqueio.jsp").forward(req, resp);
     }
 }

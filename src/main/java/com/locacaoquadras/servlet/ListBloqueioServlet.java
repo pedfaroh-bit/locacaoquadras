@@ -32,6 +32,6 @@ public class ListBloqueioServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new ServletException(e);
         }
-        req.getRequestDispatcher("/bloqueio/dashboard.jsp").forward(req, resp);
+        req.getRequestDispatcher("/bloqueio/bloqueio.jsp").forward(req, resp);
     }
 }

@@ -11,8 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.locacaoquadras.dao.ModalidadeDAO;
 
-// Lista as modalidades. Com ?id=X, também carrega essa modalidade no formulário para edição
-@WebServlet("/modalidades")
+@WebServlet({"/inicio", "/modalidades"})
 public class ListModalidadeServlet extends HttpServlet {
 
     @Override
@@ -24,9 +23,16 @@ public class ListModalidadeServlet extends HttpServlet {
                 req.setAttribute("modalidade", dao.findModalidadeById(Integer.parseInt(id)));
             }
             req.setAttribute("modalidades", dao.findAllModalidades());
+            req.setAttribute("homeCarregada", Boolean.TRUE);
         } catch (SQLException e) {
             throw new ServletException(e);
         }
-        req.getRequestDispatcher("/modalidade/dashboard.jsp").forward(req, resp);
+
+        String path = req.getServletPath();
+        if ("/inicio".equals(path)) {
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
+        } else {
+            req.getRequestDispatcher("/modalidade.jsp").forward(req, resp);
+        }
     }
 }

@@ -27,6 +27,6 @@ public class ListUsuarioServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new ServletException(e);
         }
-        req.getRequestDispatcher("/usuario/dashboard.jsp").forward(req, resp);
+        req.getRequestDispatcher("/usuario/bloqueio.jsp").forward(req, resp);
     }
 }

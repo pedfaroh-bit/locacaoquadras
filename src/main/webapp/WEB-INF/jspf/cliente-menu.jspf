@@ -1,0 +1,18 @@
+<%@ page pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
+<header class="topo">
+  <a class="logo" href="${ctx}/inicio">
+    <b class="logo-b">Q</b>
+    <span>QuadraDas</span>
+  </a>
+
+  <nav>
+    <a class="${menuAtivo == 'inicio' ? 'ativo' : ''}" href="${ctx}/inicio">Início</a>
+    <a class="${menuAtivo == 'quadras' ? 'ativo' : ''}" href="${ctx}/lista-quadras.jsp">Quadras</a>
+    <a class="${menuAtivo == 'reservas' ? 'ativo' : ''}" href="${ctx}/minhas-reservas.jsp">Reservas</a>
+    <a class="${menuAtivo == 'perfil' ? 'ativo' : ''}" href="${ctx}/perfil.jsp">Perfil</a>
+  </nav>
+
+  <a class="btn" href="${ctx}/login.jsp">Entrar</a>
+</header>
