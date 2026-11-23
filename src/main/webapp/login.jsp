@@ -17,6 +17,10 @@
   <div class="migalha">QuadraDas / Login</div>
 
   <form class="card auth" method="post" action="${ctx}/login">
+  <c:if test="${not empty erro}">
+      <p style="color:red">${erro}</p>
+  </c:if>
+
     <h2>Faça login para continuar</h2>
     <div class="campo"><label>E-mail ou telefone</label><input type="text" name="login" placeholder="seu@email.com" required></div>
     <div class="campo"><label>Senha</label><input type="password" name="senha" placeholder="Digite sua senha" required></div>

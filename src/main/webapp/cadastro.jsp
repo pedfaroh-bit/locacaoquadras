@@ -16,7 +16,7 @@
   <h1>Cadastro</h1>
   <div class="migalha">QuadraDas / Cadastro</div>
 
-  <form class="card auth duplo" method="post" action="${ctx}/create-usuario">
+  <form class="card auth duplo" method="post" action="/create-usuario">
     <h2>Crie sua conta</h2>
     <div class="duas">
       <div class="campo"><label>Nome completo</label><input type="text" name="nome" placeholder="Digite seu nome" required></div>

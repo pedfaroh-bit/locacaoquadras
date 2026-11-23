@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.locacaoquadras.config.ConnectionPoolConfig;
 import com.locacaoquadras.model.Usuario;
 
@@ -18,7 +20,7 @@ public class UsuarioDAO {
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, u.getNome());
             ps.setString(2, u.getEmail());
-            ps.setString(3, u.getSenha());
+            ps.setString(3, BCrypt.hashpw(u.getSenha(), BCrypt.gensalt()));
             ps.setString(4, u.getTelefone());
             ps.executeUpdate();
         }
@@ -55,8 +57,8 @@ public class UsuarioDAO {
     public void updateUsuario(Usuario u) throws SQLException {
         boolean trocarSenha = u.getSenha() != null && !u.getSenha().trim().isEmpty();
         String sql = trocarSenha
-            ? "UPDATE usuario SET nome = ?, email = ?, telefone = ?, senha = ? WHERE id_usuario = ?"
-            : "UPDATE usuario SET nome = ?, email = ?, telefone = ? WHERE id_usuario = ?";
+                ? "UPDATE usuario SET nome = ?, email = ?, telefone = ?, senha = ? WHERE id_usuario = ?"
+                : "UPDATE usuario SET nome = ?, email = ?, telefone = ? WHERE id_usuario = ?";
         try (Connection con = ConnectionPoolConfig.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             int i = 1;
@@ -64,7 +66,7 @@ public class UsuarioDAO {
             ps.setString(i++, u.getEmail());
             ps.setString(i++, u.getTelefone());
             if (trocarSenha) {
-                ps.setString(i++, u.getSenha());
+                ps.setString(i++, BCrypt.hashpw(u.getSenha(), BCrypt.gensalt()));
             }
             ps.setInt(i, u.getIdUsuario());
             ps.executeUpdate();
@@ -80,13 +82,40 @@ public class UsuarioDAO {
         }
     }
 
+    public Usuario autenticar(String login, String senha) throws SQLException {
+        if (login == null || senha == null || login.trim().isEmpty()) return null;
+
+        String sql = "SELECT id_usuario, nome, email, telefone, senha "
+                + "FROM usuario WHERE email = ? OR telefone = ?";
+
+        try (Connection con = ConnectionPoolConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, login.trim());
+            ps.setString(2, login.trim());
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    if (BCrypt.checkpw(senha, rs.getString("senha"))) {
+                        Usuario u = new Usuario();
+                        u.setIdUsuario(rs.getInt("id_usuario"));
+                        u.setNome(rs.getString("nome"));
+                        u.setEmail(rs.getString("email"));
+                        u.setTelefone(rs.getString("telefone"));
+                        return u;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     private Usuario montar(ResultSet rs) throws SQLException {
         Usuario u = new Usuario();
         u.setIdUsuario(rs.getInt("id_usuario"));
         u.setNome(rs.getString("nome"));
         u.setEmail(rs.getString("email"));
         u.setTelefone(rs.getString("telefone"));
-        // a senha não é carregada para não aparecer nas telas
         return u;
     }
 }
