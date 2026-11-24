@@ -1,18 +1,24 @@
-<%@ page pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="ctx" value="${pageContext.request.contextPath}" />
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="mCtx" value="${pageContext.request.contextPath}"/>
 <header class="topo">
-  <a class="logo" href="${ctx}/inicio">
-    <b class="logo-b">Q</b>
-    <span>QuadraDas</span>
-  </a>
+  <a class="logo" href="${mCtx}/index.jsp"><b>Q</b>QuadraDas</a>
 
   <nav>
-    <a class="${menuAtivo == 'inicio' ? 'ativo' : ''}" href="${ctx}/inicio">Início</a>
-    <a class="${menuAtivo == 'quadras' ? 'ativo' : ''}" href="${ctx}/lista-quadras.jsp">Quadras</a>
-    <a class="${menuAtivo == 'reservas' ? 'ativo' : ''}" href="${ctx}/minhas-reservas.jsp">Reservas</a>
-    <a class="${menuAtivo == 'perfil' ? 'ativo' : ''}" href="${ctx}/perfil.jsp">Perfil</a>
+    <a href="${mCtx}/index.jsp" class="${menuAtivo == 'inicio' ? 'ativo' : ''}">Início</a>
+    <a href="${mCtx}/list-quadra" class="${menuAtivo == 'quadras' ? 'ativo' : ''}">Quadras</a>
+    <a href="${mCtx}/list-reserva" class="${menuAtivo == 'reservas' ? 'ativo' : ''}">Reservas</a>
+    <a href="${mCtx}/perfil.jsp" class="${menuAtivo == 'perfil' ? 'ativo' : ''}">Perfil</a>
+    <c:if test="${sessionScope.papel == 'ADMIN'}">
+      <a href="${mCtx}/administrador.jsp">Painel</a>
+    </c:if>
   </nav>
 
-  <a class="btn" href="${ctx}/login.jsp">Entrar</a>
+  <c:choose>
+    <c:when test="${not empty sessionScope.usuarioLogado}">
+      <a class="btn" href="${mCtx}/logout">Sair</a>
+    </c:when>
+    <c:otherwise>
+      <a class="btn" href="${mCtx}/login.jsp">Entrar</a>
+    </c:otherwise>
+  </c:choose>
 </header>
