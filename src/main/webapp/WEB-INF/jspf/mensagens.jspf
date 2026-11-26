@@ -1,0 +1,4 @@
+<%-- Avisos no topo da página: ?erro=... / ?ok=... na URL, ou o atributo "erro" colocado pela servlet --%>
+<c:if test="${not empty param.erro}"><p class="msg msg-erro"><c:out value="${param.erro}"/></p></c:if>
+<c:if test="${not empty erro}"><p class="msg msg-erro"><c:out value="${erro}"/></p></c:if>
+<c:if test="${not empty param.ok}"><p class="msg msg-ok"><c:out value="${param.ok}"/></p></c:if>

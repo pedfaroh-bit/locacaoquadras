@@ -1,0 +1,16 @@
+<%-- Menu do PAINEL ADMINISTRATIVO. Exige o taglib "c" na página que inclui. --%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<header class="topo topo-admin">
+  <a class="logo" href="${ctx}/admin"><b>Q</b>QuadraDas</a>
+
+  <nav>
+    <a href="${ctx}/admin" class="${menuAtivo == 'dashboard' ? 'ativo' : ''}">Dashboard</a>
+    <a href="${ctx}/admin/quadras" class="${menuAtivo == 'quadras' ? 'ativo' : ''}">Quadras</a>
+    <a href="${ctx}/admin/horarios" class="${menuAtivo == 'horarios' ? 'ativo' : ''}">Horários</a>
+    <a href="${ctx}/admin/reservas" class="${menuAtivo == 'reservas' ? 'ativo' : ''}">Reservas</a>
+    <a href="${ctx}/admin/usuarios" class="${menuAtivo == 'usuarios' ? 'ativo' : ''}">Usuários</a>
+  </nav>
+
+  <span class="ola">Admin: <c:out value="${sessionScope.adminLogado.nome}"/></span>
+  <a class="btn" href="${ctx}/admin/logout">Sair</a>
+</header>

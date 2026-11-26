@@ -107,4 +107,13 @@ public class AdministradorDAO {
         a.setEmail(rs.getString("email"));
         return a;
     }
+
+    public int contarAdministradores() throws SQLException {
+        try (Connection con = ConnectionPoolConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM administrador");
+             ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getInt(1);
+        }
+    }
 }

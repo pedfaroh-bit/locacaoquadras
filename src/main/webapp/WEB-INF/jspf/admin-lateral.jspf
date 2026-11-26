@@ -1,12 +1,11 @@
-<%@ page pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <aside class="lateral">
-  <a class="${menuAtivo == 'quadras' ? 'ativo' : ''}" href="${ctx}/quadras">Quadras</a>
-  <a class="${menuAtivo == 'horarios' ? 'ativo' : ''}" href="${ctx}/horarios">Horários</a>
-  <a class="${menuAtivo == 'admin-reservas' ? 'ativo' : ''}" href="${ctx}/admin-reservas.jsp">Reservas</a>
-  <a class="${menuAtivo == 'admin-usuarios' ? 'ativo' : ''}" href="${ctx}/admin-usuarios.jsp">Usuários</a>
-  <a class="${menuAtivo == 'administradores' ? 'ativo' : ''}" href="${ctx}/administrador.jsp">Administradores</a>
-  <a class="${menuAtivo == 'modalidades' ? 'ativo' : ''}" href="${ctx}/modalidades">Modalidades</a>
-  <a class="${menuAtivo == 'bloqueios' ? 'ativo' : ''}" href="${ctx}/bloqueio.jsp">Bloqueios</a>
+  <a class="${menuAtivo == 'dashboard' ? 'ativo' : ''}" href="${ctx}/admin">Dashboard</a>
+  <a class="${menuAtivo == 'quadras' ? 'ativo' : ''}" href="${ctx}/admin/quadras">Quadras</a>
+  <a class="${menuAtivo == 'horarios' ? 'ativo' : ''}" href="${ctx}/admin/horarios">Horários</a>
+  <a class="${menuAtivo == 'reservas' ? 'ativo' : ''}" href="${ctx}/admin/reservas">Reservas</a>
+  <a class="${menuAtivo == 'usuarios' ? 'ativo' : ''}" href="${ctx}/admin/usuarios">Usuários</a>
+  <a class="${menuAtivo == 'modalidades' ? 'ativo' : ''}" href="${ctx}/admin/modalidades">Modalidades</a>
+  <a class="${menuAtivo == 'bloqueios' ? 'ativo' : ''}" href="${ctx}/admin/bloqueios">Bloqueios</a>
+  <a class="${menuAtivo == 'administradores' ? 'ativo' : ''}" href="${ctx}/admin/administradores">Administradores</a>
+  <a class="ver-site" href="${ctx}/inicio">Ver o site</a>
 </aside>

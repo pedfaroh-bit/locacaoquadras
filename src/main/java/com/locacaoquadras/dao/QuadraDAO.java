@@ -14,17 +14,18 @@ public class QuadraDAO {
 
     // Traz também o nome da modalidade para mostrar na tabela
     private static final String SELECT =
-        "SELECT q.*, m.nome AS nome_modalidade FROM quadra q "
+        "SELECT q.*, m.nome AS nome_modalidade, m.preco_semana, m.preco_fimdesemana FROM quadra q "
         + "JOIN modalidade m ON m.id_modalidade = q.id_modalidade";
 
     public void createQuadra(Quadra q) throws SQLException {
-        String sql = "INSERT INTO quadra (nome, endereco, descricao, id_modalidade) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO quadra (nome, endereco, descricao, id_modalidade, ativa) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = ConnectionPoolConfig.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, q.getNome());
             ps.setString(2, q.getEndereco());
             ps.setString(3, q.getDescricao());
             ps.setInt(4, q.getIdModalidade());
+            ps.setBoolean(5, q.isAtiva());
             ps.executeUpdate();
         }
     }
@@ -60,7 +61,7 @@ public class QuadraDAO {
     }
 
     public void updateQuadra(Quadra q) throws SQLException {
-        String sql = "UPDATE quadra SET nome = ?, endereco = ?, descricao = ?, id_modalidade = ? WHERE id_quadra = ?";
+        String sql = "UPDATE quadra SET nome = ?, endereco = ?, descricao = ?, id_modalidade = ?, ativa = ? WHERE id_quadra = ?";
 
         try (Connection con = ConnectionPoolConfig.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
@@ -68,7 +69,8 @@ public class QuadraDAO {
             ps.setString(2, q.getEndereco());
             ps.setString(3, q.getDescricao());
             ps.setInt(4, q.getIdModalidade());
-            ps.setInt(5, q.getIdQuadra());
+            ps.setBoolean(5, q.isAtiva());
+            ps.setInt(6, q.getIdQuadra());
             ps.executeUpdate();
         }
     }
@@ -91,6 +93,9 @@ public class QuadraDAO {
         q.setDescricao(rs.getString("descricao"));
         q.setIdModalidade(rs.getInt("id_modalidade"));
         q.setNomeModalidade(rs.getString("nome_modalidade"));
+        q.setPrecoSemana(rs.getBigDecimal("preco_semana"));
+        q.setPrecoFimdesemana(rs.getBigDecimal("preco_fimdesemana"));
+        q.setAtiva(rs.getBoolean("ativa"));
         return q;
     }
 }

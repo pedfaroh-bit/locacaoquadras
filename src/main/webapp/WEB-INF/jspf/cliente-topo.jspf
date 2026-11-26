@@ -1,0 +1,23 @@
+<%-- Menu do SITE (cliente). A página que inclui este arquivo precisa declarar o taglib "c" e, se quiser
+     destacar o item atual, definir a variável menuAtivo (inicio, quadras, reservas, perfil). --%>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+<header class="topo">
+  <a class="logo" href="${ctx}/inicio"><b>Q</b>QuadraDas</a>
+
+  <nav>
+    <a href="${ctx}/inicio" class="${menuAtivo == 'inicio' ? 'ativo' : ''}">Início</a>
+    <a href="${ctx}/quadras" class="${menuAtivo == 'quadras' ? 'ativo' : ''}">Quadras</a>
+    <a href="${ctx}/minhas-reservas" class="${menuAtivo == 'reservas' ? 'ativo' : ''}">Reservas</a>
+    <a href="${ctx}/perfil" class="${menuAtivo == 'perfil' ? 'ativo' : ''}">Perfil</a>
+  </nav>
+
+  <c:choose>
+    <c:when test="${not empty sessionScope.usuarioLogado}">
+      <span class="ola">Olá, <c:out value="${sessionScope.usuarioLogado.nome}"/></span>
+      <a class="btn" href="${ctx}/logout">Sair</a>
+    </c:when>
+    <c:otherwise>
+      <a class="btn" href="${ctx}/login">Entrar</a>
+    </c:otherwise>
+  </c:choose>
+</header>

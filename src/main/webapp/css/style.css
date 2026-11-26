@@ -153,3 +153,75 @@ td.vazio{text-align:center}
   .lateral{flex-direction:row;flex-wrap:wrap;min-height:0}.auth,.auth.duplo{padding:22px}.auth .duas{grid-template-columns:1fr}
   .res-linha{flex-wrap:wrap}
 }
+/* ===== acrescentado na versão completa ===== */
+.topo .ola{margin-right:14px;font-size:11px;font-weight:700;color:#33415c}
+.topo-admin{border-bottom:2px solid var(--marinho)}
+.msg{margin:0 0 14px;padding:10px 12px;border-radius:8px;font-size:11px;font-weight:700}
+.msg-erro{color:#9b1c1c;background:#fdecec;border:1px solid #f5c2c2}
+.msg-ok{color:#14532d;background:#e8f7ee;border:1px solid #b6e3c6}
+.msg-info{color:#1e3a8a;background:#eaf1ff;border:1px solid #c7d9ff}
+input[type=checkbox],input[type=radio]{width:auto;height:auto}
+.campo.check label{display:flex;align-items:center;gap:8px;margin:0;font-size:11px}
+.campo small{display:block;margin-top:5px;font-size:9px;color:var(--suave);font-weight:400}
+.inline{display:inline;margin:0}
+a.acao,.acao{color:var(--azul);font-weight:700}
+td .link-perigo{font-size:9px}
+td.acoes{white-space:nowrap}
+.st-ok{color:var(--ok)}.st-erro{color:var(--erro)}.st-aviso{color:var(--aviso)}
+.ver-site{margin-top:auto;border-top:1px solid rgba(255,255,255,.18);border-radius:0!important;padding-top:14px!important;opacity:.8}
+
+/* site: filtros da lista de quadras */
+.filtros{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card-q .preco small{font-weight:400;color:var(--suave)}
+
+/* detalhes da quadra */
+.dia-escolhida{display:flex;align-items:flex-end;gap:12px;margin-bottom:16px}
+.dia-escolhida .campo{width:190px}
+.hora.off{width:auto;padding:0 14px;border-color:var(--borda);background:#f1f4f8;color:#94a3b8;text-decoration:line-through;cursor:not-allowed}
+a.hora:hover{background:#eef5ff}
+
+/* reserva: calendário e horários */
+.cal-topo{display:flex;align-items:center;justify-content:space-between}
+.cal-topo a{display:inline-grid;place-items:center;width:26px;height:26px;border:1px solid var(--borda);border-radius:6px;font-size:13px}
+.cal-topo a.desligado{opacity:.3;pointer-events:none}
+.dia-sem{width:32px;text-align:center;font-size:8px;font-weight:700;color:var(--suave)}
+a.dia,span.dia{display:inline-flex;align-items:center;justify-content:center}
+span.dia.off{opacity:.35;cursor:default}
+span.dia.vazio-dia{border:0;background:none}
+.slot-op{position:relative;display:block}
+.slot-op input{position:absolute;opacity:0;pointer-events:none}
+span.slot{display:flex;align-items:center;justify-content:center;width:100%;cursor:pointer}
+.slot-op input:checked + .slot{border-color:var(--azul);color:var(--azul);background:#eef5ff}
+.slot-op input:focus-visible + .slot{outline:2px solid var(--azul);outline-offset:1px}
+span.slot.off{opacity:.45;cursor:not-allowed;text-decoration:line-through;background:#f1f4f8}
+.sem-horario{grid-column:1/-1;color:var(--suave);font-size:11px}
+.reservar-ok{margin-top:18px}
+
+/* minhas reservas */
+.abas a{padding-bottom:2px}
+.res-linha .dir{grid-template-columns:auto 120px}
+.res-linha .dir form{grid-column:1/-1;text-align:right}
+.res-linha .devolvido{grid-column:1/-1;font-size:9px;color:var(--suave);text-align:right}
+
+/* perfil */
+.menu-perfil a:hover,.menu-perfil a.ativo{color:var(--azul)}
+
+/* admin */
+.grade td.livre{color:var(--ok)}
+.grade td.reservado{color:var(--erro)}
+.grade td.bloqueado{color:var(--aviso)}
+.grade td.passou{color:#94a3b8}
+.grade td.hora-col{white-space:nowrap}
+.sel-semana{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.sel-semana .campo{width:240px}
+.semana-nav{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:700;margin:6px 0 4px}
+.semana-nav a{padding:4px 10px;border:1px solid var(--borda);border-radius:6px}
+.detalhe{padding:16px;margin-bottom:18px}
+.detalhe dl{display:grid;grid-template-columns:140px 1fr;gap:8px 12px;margin:10px 0 16px;font-size:11px}
+.detalhe dt{color:var(--suave)}
+.detalhe dd{margin:0;font-weight:700}
+.auth-admin h2{color:var(--marinho)}
+.faixa-admin{display:inline-block;margin:0 auto 14px;padding:3px 10px;border-radius:99px;background:var(--marinho);color:#fff;font-size:9px;font-weight:700;letter-spacing:.04em}
+.auth .centro-txt{text-align:center}
+.cards .stat strong{font-size:22px}
+@media(max-width:860px){.filtros{grid-template-columns:1fr}.busca{grid-template-columns:1fr}}

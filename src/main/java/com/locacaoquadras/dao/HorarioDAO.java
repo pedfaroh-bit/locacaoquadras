@@ -86,4 +86,20 @@ public class HorarioDAO {
         h.setNomeQuadra(rs.getString("nome_quadra"));
         return h;
     }
+
+    // Horários de uma quadra, do mais cedo ao mais tarde
+    public List<Horario> findByQuadra(int idQuadra) throws SQLException {
+        String sql = SELECT + " WHERE h.id_quadra = ? ORDER BY h.hora_inicio";
+        List<Horario> lista = new ArrayList<>();
+        try (Connection con = ConnectionPoolConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idQuadra);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(montar(rs));
+                }
+            }
+        }
+        return lista;
+    }
 }

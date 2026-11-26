@@ -7,6 +7,7 @@ public class Usuario {
     private String email;
     private String senha;
     private String telefone;
+    private boolean ativo = true;
 
     public int getIdUsuario() {
         return idUsuario;
@@ -46,5 +47,13 @@ public class Usuario {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
     }
 }

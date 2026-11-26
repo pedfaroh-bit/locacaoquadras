@@ -1,9 +1,7 @@
 package com.locacaoquadras.servlet;
 
-import com.locacaoquadras.dao.AdministradorDAO;
-import com.locacaoquadras.dao.UsuarioDAO;
-import com.locacaoquadras.model.Administrador;
-import com.locacaoquadras.model.Usuario;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,56 +9,55 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.sql.SQLException;
 
+import com.locacaoquadras.dao.UsuarioDAO;
+import com.locacaoquadras.model.Usuario;
+import com.locacaoquadras.util.Sessao;
+
+// Login do CLIENTE do site. O administrador entra por outra porta: /admin/login
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        resp.sendRedirect(req.getContextPath() + "/login.jsp");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (Sessao.usuario(req) != null) {
+            ServletUtil.redirecionar(req, resp, "/inicio");
+            return;
+        }
+        ServletUtil.abrir(req, resp, "cliente/login.jsp");
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        req.setCharacterEncoding("UTF-8");
-        String login = req.getParameter("login");
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String login = ServletUtil.texto(req.getParameter("login"));
         String senha = req.getParameter("senha");
 
-        Administrador adm;
-        Usuario usuario = null;
+        Usuario usuario;
         try {
-            adm = new AdministradorDAO().autenticar(login, senha);
-            if (adm == null) {
-                usuario = new UsuarioDAO().autenticar(login, senha);
-            }
+            usuario = new UsuarioDAO().autenticar(login, senha);
         } catch (SQLException e) {
             throw new ServletException("Erro ao autenticar", e);
         }
 
-        if (adm != null) {
-            iniciarSessao(req, adm, "ADMIN");
-            resp.sendRedirect(req.getContextPath() + "/administrador.jsp");
-        } else if (usuario != null) {
-            iniciarSessao(req, usuario, "USUARIO");
-            resp.sendRedirect(req.getContextPath() + "/index.jsp");
-        } else {
-            req.setAttribute("erro", "Login ou senha inválidos");
-            req.getRequestDispatcher("/login.jsp").forward(req, resp);
+        if (usuario == null) {
+            req.setAttribute("erro", "E-mail/telefone ou senha inválidos.");
+            req.setAttribute("loginDigitado", login);
+            ServletUtil.abrir(req, resp, "cliente/login.jsp");
+            return;
         }
-    }
+        if (!usuario.isAtivo()) {
+            req.setAttribute("erro", "Sua conta está desativada. Fale com a administração.");
+            req.setAttribute("loginDigitado", login);
+            ServletUtil.abrir(req, resp, "cliente/login.jsp");
+            return;
+        }
 
-    private void iniciarSessao(HttpServletRequest req, Object pessoa, String papel) {
-        HttpSession antiga = req.getSession(false);
-        if (antiga != null) antiga.invalidate();
+        Sessao.entrar(req, Sessao.USUARIO, usuario);
 
-        HttpSession session = req.getSession(true);
-        session.setAttribute("usuarioLogado", pessoa);
-        session.setAttribute("papel", papel);
-        session.setMaxInactiveInterval(30 * 60);
+        // Se o cliente foi mandado para o login por tentar abrir outra página, volta para ela
+        HttpSession s = req.getSession(false);
+        String voltar = (String) s.getAttribute(Sessao.VOLTAR_PARA);
+        s.removeAttribute(Sessao.VOLTAR_PARA);
+        resp.sendRedirect(Sessao.destinoSeguro(req, voltar, "/inicio"));
     }
 }

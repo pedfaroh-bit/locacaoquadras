@@ -2,6 +2,8 @@ package com.locacaoquadras.model;
 
 import java.math.BigDecimal;
 
+import com.locacaoquadras.util.Formato;
+
 public class Modalidade {
     private int idModalidade;
     private String nome;
@@ -38,5 +40,13 @@ public class Modalidade {
 
     public void setPrecoFimdesemana(BigDecimal precoFimdesemana) {
         this.precoFimdesemana = precoFimdesemana;
+    }
+
+    public String getPrecoSemanaFormatado() {
+        return Formato.moeda(precoSemana);
+    }
+
+    public String getPrecoFimdesemanaFormatado() {
+        return Formato.moeda(precoFimdesemana);
     }
 }

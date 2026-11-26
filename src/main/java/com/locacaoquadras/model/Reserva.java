@@ -6,11 +6,14 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+import com.locacaoquadras.util.Formato;
+
 public class Reserva {
 
     private int idReserva;
     private int idUsuario;
     private int idHorario;
+    private int idQuadra;
     private LocalDate dataReserva;
     private String status;
     private BigDecimal valorPago;
@@ -125,5 +128,44 @@ public class Reserva {
 
     public String getDataCancelamentoFormatada() {
         return dataCancelamento == null ? "" : dataCancelamento.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    public int getIdQuadra() {
+        return idQuadra;
+    }
+
+    public void setIdQuadra(int idQuadra) {
+        this.idQuadra = idQuadra;
+    }
+
+    public boolean isAtiva() {
+        return "Ativa".equals(status);
+    }
+
+    // Nas telas, uma reserva "Ativa" aparece como "Confirmada"
+    public String getStatusExibicao() {
+        return isAtiva() ? "Confirmada" : "Cancelada";
+    }
+
+    public String getHorarioFormatado() {
+        return horaInicio == null ? "" : horaInicio + "\u2013" + horaFim;
+    }
+
+    public String getDataHoraFormatada() {
+        return getDataReservaFormatada() + " \u2022 " + horaInicio;
+    }
+
+    // Já terminou? Usado para separar "Futuras" de "Passadas"
+    public boolean isPassada() {
+        return dataReserva != null && horaFim != null
+                && dataReserva.atTime(horaFim).isBefore(java.time.LocalDateTime.now());
+    }
+
+    public String getValorPagoFormatado() {
+        return Formato.moeda(valorPago);
+    }
+
+    public String getValorDevolvidoFormatado() {
+        return Formato.moeda(valorDevolvido);
     }
 }

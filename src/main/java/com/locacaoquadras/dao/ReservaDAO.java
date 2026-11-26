@@ -10,7 +10,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.locacaoquadras.config.ConnectionPoolConfig;
 import com.locacaoquadras.model.Reserva;
@@ -19,7 +21,7 @@ public class ReservaDAO {
 
     // Traz também o nome do usuário, a quadra e o horário para mostrar na tabela
     private static final String SELECT =
-        "SELECT r.*, u.nome AS nome_usuario, q.nome AS nome_quadra, h.hora_inicio, h.hora_fim "
+        "SELECT r.*, u.nome AS nome_usuario, q.nome AS nome_quadra, h.id_quadra, h.hora_inicio, h.hora_fim "
         + "FROM reserva r "
         + "JOIN usuario u ON u.id_usuario = r.id_usuario "
         + "JOIN horario h ON h.id_horario = r.id_horario "
@@ -135,6 +137,7 @@ public class ReservaDAO {
         r.setIdReserva(rs.getInt("id_reserva"));
         r.setIdUsuario(rs.getInt("id_usuario"));
         r.setIdHorario(rs.getInt("id_horario"));
+        r.setIdQuadra(rs.getInt("id_quadra"));
         r.setDataReserva(rs.getObject("data_reserva", LocalDate.class));
         r.setStatus(rs.getString("status"));
         r.setValorPago(rs.getBigDecimal("valor_pago"));
@@ -145,5 +148,69 @@ public class ReservaDAO {
         r.setHoraInicio(rs.getObject("hora_inicio", LocalTime.class));
         r.setHoraFim(rs.getObject("hora_fim", LocalTime.class));
         return r;
+    }
+
+    // Reservas de um cliente, da mais recente para a mais antiga
+    public List<Reserva> findByUsuario(int idUsuario) throws SQLException {
+        String sql = SELECT + " WHERE r.id_usuario = ? ORDER BY r.data_reserva DESC, h.hora_inicio DESC";
+        List<Reserva> lista = new ArrayList<>();
+        try (Connection con = ConnectionPoolConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idUsuario);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(montar(rs));
+                }
+            }
+        }
+        return lista;
+    }
+
+    // Ids dos horários da quadra que já têm reserva ativa em uma data
+    public Set<Integer> idsHorariosReservados(int idQuadra, LocalDate data) throws SQLException {
+        String sql = "SELECT r.id_horario FROM reserva r JOIN horario h ON h.id_horario = r.id_horario "
+            + "WHERE h.id_quadra = ? AND r.data_reserva = ? AND r.status = 'Ativa'";
+        Set<Integer> ids = new HashSet<>();
+        try (Connection con = ConnectionPoolConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idQuadra);
+            ps.setObject(2, data);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ids.add(rs.getInt(1));
+                }
+            }
+        }
+        return ids;
+    }
+
+    // Reservas ativas da quadra em um período (usado na grade semanal do admin)
+    public List<Reserva> findAtivasByQuadraEntre(int idQuadra, LocalDate inicio, LocalDate fim) throws SQLException {
+        String sql = SELECT + " WHERE h.id_quadra = ? AND r.status = 'Ativa' AND r.data_reserva BETWEEN ? AND ?";
+        List<Reserva> lista = new ArrayList<>();
+        try (Connection con = ConnectionPoolConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idQuadra);
+            ps.setObject(2, inicio);
+            ps.setObject(3, fim);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(montar(rs));
+                }
+            }
+        }
+        return lista;
+    }
+
+    // Cancela só se ainda estiver ativa. Devolve true se cancelou.
+    public boolean cancelarReserva(int idReserva, BigDecimal valorDevolvido) throws SQLException {
+        String sql = "UPDATE reserva SET status = 'Cancelada', valor_devolvido = ?, "
+            + "data_cancelamento = CURRENT_TIMESTAMP WHERE id_reserva = ? AND status = 'Ativa'";
+        try (Connection con = ConnectionPoolConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setBigDecimal(1, valorDevolvido);
+            ps.setInt(2, idReserva);
+            return ps.executeUpdate() > 0;
+        }
     }
 }

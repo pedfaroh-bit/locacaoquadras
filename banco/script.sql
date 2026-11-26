@@ -13,7 +13,8 @@ CREATE TABLE usuario (
   nome VARCHAR(100) NOT NULL,
   email VARCHAR(150) NOT NULL UNIQUE,
   senha VARCHAR(255) NOT NULL,
-  telefone VARCHAR(20)
+  telefone VARCHAR(20),
+  ativo BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 CREATE TABLE administrador (
@@ -29,6 +30,7 @@ CREATE TABLE quadra (
   endereco VARCHAR(255) NOT NULL,
   descricao VARCHAR(255),
   id_modalidade INT NOT NULL,
+  ativa BOOLEAN NOT NULL DEFAULT TRUE,
   FOREIGN KEY (id_modalidade) REFERENCES modalidade(id_modalidade)
 );
 

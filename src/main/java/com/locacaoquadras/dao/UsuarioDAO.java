@@ -15,13 +15,14 @@ import com.locacaoquadras.model.Usuario;
 public class UsuarioDAO {
 
     public void createUsuario(Usuario u) throws SQLException {
-        String sql = "INSERT INTO usuario (nome, email, senha, telefone) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO usuario (nome, email, senha, telefone, ativo) VALUES (?, ?, ?, ?, ?)";
         try (Connection con = ConnectionPoolConfig.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, u.getNome());
             ps.setString(2, u.getEmail());
             ps.setString(3, BCrypt.hashpw(u.getSenha(), BCrypt.gensalt()));
             ps.setString(4, u.getTelefone());
+            ps.setBoolean(5, u.isAtivo());
             ps.executeUpdate();
         }
     }
@@ -85,7 +86,7 @@ public class UsuarioDAO {
     public Usuario autenticar(String login, String senha) throws SQLException {
         if (login == null || senha == null || login.trim().isEmpty()) return null;
 
-        String sql = "SELECT id_usuario, nome, email, telefone, senha "
+        String sql = "SELECT id_usuario, nome, email, telefone, senha, ativo "
                 + "FROM usuario WHERE email = ? OR telefone = ?";
 
         try (Connection con = ConnectionPoolConfig.getConnection();
@@ -102,6 +103,7 @@ public class UsuarioDAO {
                         u.setNome(rs.getString("nome"));
                         u.setEmail(rs.getString("email"));
                         u.setTelefone(rs.getString("telefone"));
+                        u.setAtivo(rs.getBoolean("ativo"));
                         return u;
                     }
                 }
@@ -116,6 +118,27 @@ public class UsuarioDAO {
         u.setNome(rs.getString("nome"));
         u.setEmail(rs.getString("email"));
         u.setTelefone(rs.getString("telefone"));
+        u.setAtivo(rs.getBoolean("ativo"));
         return u;
+    }
+
+    // Usado pelo administrador para ativar/desativar o acesso de um cliente
+    public void updateAtivo(int idUsuario, boolean ativo) throws SQLException {
+        String sql = "UPDATE usuario SET ativo = ? WHERE id_usuario = ?";
+        try (Connection con = ConnectionPoolConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setBoolean(1, ativo);
+            ps.setInt(2, idUsuario);
+            ps.executeUpdate();
+        }
+    }
+
+    public int contarUsuarios() throws SQLException {
+        try (Connection con = ConnectionPoolConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) FROM usuario");
+             ResultSet rs = ps.executeQuery()) {
+            rs.next();
+            return rs.getInt(1);
+        }
     }
 }

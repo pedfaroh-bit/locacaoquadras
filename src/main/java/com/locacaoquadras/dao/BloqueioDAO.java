@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.locacaoquadras.config.ConnectionPoolConfig;
 import com.locacaoquadras.model.Bloqueio;
@@ -109,5 +111,41 @@ public class BloqueioDAO {
         b.setHoraInicio(rs.getObject("hora_inicio", LocalTime.class));
         b.setHoraFim(rs.getObject("hora_fim", LocalTime.class));
         return b;
+    }
+
+    // Ids dos horários da quadra que estão bloqueados em uma data
+    public Set<Integer> idsHorariosBloqueados(int idQuadra, LocalDate data) throws SQLException {
+        String sql = "SELECT b.id_horario FROM bloqueio b JOIN horario h ON h.id_horario = b.id_horario "
+            + "WHERE h.id_quadra = ? AND b.data_bloqueio = ?";
+        Set<Integer> ids = new HashSet<>();
+        try (Connection con = ConnectionPoolConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idQuadra);
+            ps.setObject(2, data);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    ids.add(rs.getInt(1));
+                }
+            }
+        }
+        return ids;
+    }
+
+    // Bloqueios da quadra em um período (usado na grade semanal do admin)
+    public List<Bloqueio> findByQuadraEntre(int idQuadra, LocalDate inicio, LocalDate fim) throws SQLException {
+        String sql = SELECT + " WHERE h.id_quadra = ? AND b.data_bloqueio BETWEEN ? AND ?";
+        List<Bloqueio> lista = new ArrayList<>();
+        try (Connection con = ConnectionPoolConfig.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idQuadra);
+            ps.setObject(2, inicio);
+            ps.setObject(3, fim);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(montar(rs));
+                }
+            }
+        }
+        return lista;
     }
 }

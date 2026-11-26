@@ -59,3 +59,8 @@ CREATE TABLE IF NOT EXISTS bloqueio (
   FOREIGN KEY (id_administrador) REFERENCES administrador(id_administrador),
   FOREIGN KEY (id_horario) REFERENCES horario(id_horario)
 );
+
+-- Colunas adicionadas depois (status Ativa/Inativa das telas de administração).
+-- "IF NOT EXISTS" faz o script funcionar tanto em banco novo quanto em banco já criado.
+ALTER TABLE quadra  ADD COLUMN IF NOT EXISTS ativa BOOLEAN NOT NULL DEFAULT TRUE;
+ALTER TABLE usuario ADD COLUMN IF NOT EXISTS ativo BOOLEAN NOT NULL DEFAULT TRUE;
